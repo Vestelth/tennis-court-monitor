@@ -19,7 +19,7 @@ def send(msg):
 # ---------- TELEGRAM COMMANDS ----------
 
 def handle_commands():
-
+    
     tg_state = json.load(open("telegram_state.json"))
 
     r = requests.get(
@@ -68,6 +68,43 @@ def handle_commands():
             config["monitor_hours"]["end"] = int(e)
             json.dump(config, open("config.json", "w"), indent=2)
             send(f"Ustawiono godziny {s}-{e}")
+
+        elif text == "/status":
+            config = json.load(open("config.json"))
+            enabled = open("enabled.txt").read().strip()
+
+            sample_url = config["urls"][0]["url"]
+            qs = parse_qs(urlparse(sample_url).query)
+            duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
+
+            send(
+                "Status monitoringu:\n"
+                f"Aktywny: {'TAK' if enabled == '1' else 'NIE'}\n"
+                f"Godziny: {config['monitor_hours']['start']}-{config['monitor_hours']['end']}\n"
+                f"Długość slotu: {duration}h\n"
+                f"Liczba kortów: {len(config['urls'])}"
+            )
+
+        elif text == "/list":
+            config = json.load(open("config.json"))
+
+            lines = ["Monitorowane korty:"]
+            for u in config["urls"]:
+                lines.append(f"- {u['name']}")
+
+            send("\n".join(lines))
+
+        elif text == "/help":
+            send(
+                "Dostępne komendy:\n\n"
+                "/start – włącza monitoring\n"
+                "/stop – wyłącza monitoring\n"
+                "/status – pokazuje aktualne ustawienia\n"
+                "/list – lista monitorowanych kortów\n"
+                "/set N – ustawia czas_rezerwacji (np. /set 4)\n"
+                "/hours H1 H2 – ustawia godziny monitorowania (np. /hours 16 22)\n"
+                "/help – pokazuje tę pomoc"
+            )
 
     tg_state["last_update_id"] = last_id
     json.dump(tg_state, open("telegram_state.json", "w"), indent=2)
