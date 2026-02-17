@@ -47,7 +47,14 @@ def handle_commands():
             send("Monitoring zatrzymany")
 
         elif text.startswith("/set"):
-            val = text.split()[1]
+            elif text.startswith("/set"):
+            parts = text.split()
+    
+            if len(parts) < 2:
+                send("Użycie: /set 4")
+                continue
+                
+            val = parts[1]
             config = json.load(open("config.json"))
 
             for u in config["urls"]:
@@ -62,7 +69,11 @@ def handle_commands():
             send(f"Ustawiono czas_rezerwacji={val}")
 
         elif text.startswith("/hours"):
-            _, s, e = text.split()
+            parts = text.split()
+            if len(parts) < 3:
+                send("Użycie: /hours 16 22")
+                continue
+            _, s, e = parts
             config = json.load(open("config.json"))
             config["monitor_hours"]["start"] = int(s)
             config["monitor_hours"]["end"] = int(e)
