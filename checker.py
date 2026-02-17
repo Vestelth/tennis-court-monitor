@@ -100,6 +100,10 @@ def handle_commands():
                 lines.append(f"- {u['name']}")
             send("\n".join(lines))
 
+        elif text == "/run":
+            open("force_run.txt", "w").write("1")
+            send("Wymuszono natychmiastowe sprawdzenie przy następnym uruchomieniu workflow.")
+
         elif text == "/help":
             send(
                 "Dostępne komendy:\n\n"
@@ -119,13 +123,15 @@ handle_commands()
 
 # ---------- MONITORING ----------
 
-if open("enabled.txt").read().strip() != "1":
+force_run = open("force_run.txt").read().strip() == "1"
+
+if open("enabled.txt").read().strip() != "1" and not force_run:
     exit()
 
 config = json.load(open("config.json"))
 
 hour = datetime.datetime.now().hour
-if not (config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end"]):
+if not force_run and not (config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end"]):
     exit()
 
 state = json.load(open("state.json"))
@@ -167,3 +173,7 @@ if len(new_reported) != len(state["reported"]):
 
 if changed:
     json.dump(state, open("state.json", "w"), indent=2)
+
+if force_run:
+    open("force_run.txt", "w").write("0")
+    changed = True
