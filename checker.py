@@ -3,29 +3,71 @@ import json
 import datetime
 import os
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 BOT_TOKEN = os.environ["BOT_TOKEN"]
 CHAT_ID = os.environ["CHAT_ID"]
 
+BASE = f"https://api.telegram.org/bot{BOT_TOKEN}"
+
 def send(msg):
     requests.post(
-        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        f"{BASE}/sendMessage",
         json={"chat_id": CHAT_ID, "text": msg}
     )
 
-def get_duration(url):
-    qs = parse_qs(urlparse(url).query)
-    val = int(qs.get("czas_rezerwacji", ["2"])[0])
-    return val * 0.5
+# ---------- TELEGRAM COMMANDS ----------
 
-# sprawdzenie czy monitoring włączony
+def handle_commands():
+    r = requests.get(f"{BASE}/getUpdates").json()
+
+    for upd in r.get("result", []):
+        msg = upd.get("message")
+        if not msg:
+            continue
+
+        text = msg.get("text", "")
+
+        if text == "/start":
+            open("enabled.txt", "w").write("1")
+            send("Monitoring włączony")
+
+        elif text == "/stop":
+            open("enabled.txt", "w").write("0")
+            send("Monitoring zatrzymany")
+
+        elif text.startswith("/set"):
+            val = text.split()[1]
+            config = json.load(open("config.json"))
+
+            for u in config["urls"]:
+                parsed = urlparse(u["url"])
+                qs = parse_qs(parsed.query)
+                qs["czas_rezerwacji"] = [val]
+
+                new_query = urlencode(qs, doseq=True)
+                u["url"] = urlunparse(parsed._replace(query=new_query))
+
+            json.dump(config, open("config.json", "w"), indent=2)
+            send(f"Ustawiono czas_rezerwacji={val}")
+
+        elif text.startswith("/hours"):
+            _, s, e = text.split()
+            config = json.load(open("config.json"))
+            config["monitor_hours"]["start"] = int(s)
+            config["monitor_hours"]["end"] = int(e)
+            json.dump(config, open("config.json", "w"), indent=2)
+            send(f"Ustawiono godziny {s}-{e}")
+
+handle_commands()
+
+# ---------- MONITORING ----------
+
 if open("enabled.txt").read().strip() != "1":
     exit()
 
 config = json.load(open("config.json"))
 
-# sprawdzenie godzin monitorowania
 hour = datetime.datetime.now().hour
 if not (config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end"]):
     exit()
@@ -35,17 +77,16 @@ changed = False
 
 for item in config["urls"]:
 
-    duration = get_duration(item["url"])
+    qs = parse_qs(urlparse(item["url"]).query)
+    duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
 
     r = requests.get(item["url"], timeout=30)
     soup = BeautifulSoup(r.text, "html.parser")
 
-    # wszystkie wolne sloty
     for a in soup.select("a.btn-success"):
         term = a.get("data-termin")
-
         span = a.find("span")
-        time_range = span.get_text(strip=True) if span else "nieznany czas"
+        time_range = span.get_text(strip=True) if span else "?"
 
         key = f"{item['name']}_{term}"
 
