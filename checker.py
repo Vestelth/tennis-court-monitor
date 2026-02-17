@@ -136,6 +136,45 @@ if not (config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end
 state = json.load(open("state.json"))
 changed = False
 
+currently_visible = set()
+
+for item in config["urls"]:
+
+    qs = parse_qs(urlparse(item["url"]).query)
+    duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
+
+    r = requests.get(item["url"], timeout=30)
+    soup = BeautifulSoup(r.text, "html.parser")
+
+    for a in soup.select("a.btn-success"):
+        term = a.get("data-termin")
+        span = a.find("span")
+        time_range = span.get_text(strip=True) if span else "?"
+
+        key = f"{item['name']}_{term}"
+        currently_visible.add(key)
+
+        if key not in state["reported"]:
+            send(
+                f"Wolny kort: {item['name']}\n"
+                f"Termin: {time_range}\n"
+                f"Długość: {duration}h\n"
+                f"{item['url']}"
+            )
+            state["reported"].append(key)
+            changed = True
+
+# usuwamy sloty które już nie są dostępne
+new_reported = [k for k in state["reported"] if k in currently_visible]
+
+if len(new_reported) != len(state["reported"]):
+    state["reported"] = new_reported
+    changed = True
+
+if changed:
+    json.dump(state, open("state.json", "w"), indent=2)
+
+
 for item in config["urls"]:
 
     qs = parse_qs(urlparse(item["url"]).query)
