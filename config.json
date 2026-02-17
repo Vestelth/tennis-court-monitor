@@ -1,0 +1,33 @@
+{
+  "monitor_hours": {
+    "start": 12,
+    "end": 22
+  },
+  "play_time": 2,
+  "urls": [
+    {
+      "name": "Morelowa - mączka",
+      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=34&czas_rezerwacji=4"
+    },
+    {
+      "name": "Morelowa - sztuczna trawa",
+      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=28&czas_rezerwacji=4"
+    },
+    {
+      "name": "Morelowa - hard",
+      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=636&czas_rezerwacji=4"
+    },
+    {
+      "name": "Korty u Macieja",
+      "url": "https://kluby.org/umacieja/dostepnosc?typ_obiektu=47&czas_rezerwacji=4"
+    },
+    {
+      "name": "OSiR Bemowo",
+      "url": "https://kluby.org/osir-bemowo/dostepnosc?typ_obiektu=782&czas_rezerwacji=4"
+    },
+    {
+      "name": "Spójnia Górna",
+      "url": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=1032&czas_rezerwacji=4"
+    }
+  ]
+}
