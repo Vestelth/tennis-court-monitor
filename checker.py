@@ -19,9 +19,19 @@ def send(msg):
 # ---------- TELEGRAM COMMANDS ----------
 
 def handle_commands():
-    r = requests.get(f"{BASE}/getUpdates").json()
+
+    tg_state = json.load(open("telegram_state.json"))
+
+    r = requests.get(
+        f"{BASE}/getUpdates",
+        params={"offset": tg_state["last_update_id"] + 1}
+    ).json()
+
+    last_id = tg_state["last_update_id"]
 
     for upd in r.get("result", []):
+        last_id = max(last_id, upd["update_id"])
+
         msg = upd.get("message")
         if not msg:
             continue
@@ -58,6 +68,9 @@ def handle_commands():
             config["monitor_hours"]["end"] = int(e)
             json.dump(config, open("config.json", "w"), indent=2)
             send(f"Ustawiono godziny {s}-{e}")
+
+    tg_state["last_update_id"] = last_id
+    json.dump(tg_state, open("telegram_state.json", "w"), indent=2)
 
 handle_commands()
 
