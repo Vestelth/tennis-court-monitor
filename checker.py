@@ -101,8 +101,9 @@ def handle_commands():
             send("\n".join(lines))
 
         elif text == "/run":
-            open("force_run.txt", "w").write("1")
-            send("Wymuszono natychmiastowe sprawdzenie przy następnym uruchomieniu workflow.")
+            if open("force_run.txt").read().strip() != "1":
+                open("force_run.txt", "w").write("1")
+                send("Wymuszono natychmiastowe sprawdzenie przy następnym uruchomieniu workflow.")
 
         elif text.startswith("/scope"):
             parts = text.split()
