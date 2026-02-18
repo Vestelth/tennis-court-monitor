@@ -144,6 +144,8 @@ if open("enabled.txt").read().strip() != "1" and not force_run:
 
 config = json.load(open("config.json"))
 
+slot_scope = config.get("slot_scope", {"start": 15, "end": 23})
+
 hour = datetime.datetime.now().hour
 if not force_run and not (config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end"]):
     exit()
