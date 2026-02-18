@@ -10,16 +10,20 @@
   },
   "urls": [
     {
-      "name": "Morelowa - m\u0105czka",
-      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=34&czas_rezerwacji=4"
+      "name": "Spojnia Gorna",
+      "url": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=1032&czas_rezerwacji=2"
+    },
+    {
+      "name": "Morelowa - maczka",
+      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=34&czas_rezerwacji=2"
     },
     {
       "name": "Morelowa - sztuczna trawa",
-      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=28&czas_rezerwacji=4"
+      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=28&czas_rezerwacji=2"
     },
     {
       "name": "Morelowa - hard",
-      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=636&czas_rezerwacji=4"
+      "url": "https://kluby.org/mtc/dostepnosc?typ_obiektu=636&czas_rezerwacji=2"
     },
     {
       "name": "Korty u Macieja",
@@ -28,10 +32,6 @@
     {
       "name": "OSiR Bemowo",
       "url": "https://kluby.org/osir-bemowo/dostepnosc?typ_obiektu=782&czas_rezerwacji=4"
-    },
-    {
-      "name": "Sp\u00f3jnia G\u00f3rna",
-      "url": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=1032&czas_rezerwacji=4"
     }
   ]
 }
