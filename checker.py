@@ -166,7 +166,9 @@ for item in config["urls"]:
     qs = parse_qs(urlparse(item["url"]).query)
     duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
     
-    ajax_url = build_ajax_url(item["url"])
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    ajax_url = f"{item['url']}&data_grafiku={today}"
+    
     r = requests.get(ajax_url, headers=headers, timeout=30)
     
     send(r.text[:300])
