@@ -1,9 +1,13 @@
 {
-  "monitor_hours": {
+  "play_time": 2,
+  "slot_scope": {
     "start": 16,
     "end": 22
   },
-  "play_time": 2,
+  "monitor_hours": {
+    "start": 15,
+    "end": 23
+  },
   "urls": [
     {
       "name": "Morelowa - m\u0105czka",
