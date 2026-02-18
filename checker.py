@@ -104,6 +104,22 @@ def handle_commands():
             open("force_run.txt", "w").write("1")
             send("Wymuszono natychmiastowe sprawdzenie przy następnym uruchomieniu workflow.")
 
+        elif text.startswith("/scope"):
+            parts = text.split()
+            if len(parts) < 3:
+                send("Użycie: /scope 16 22")
+                continue
+        
+            _, s, e = parts
+            config = json.load(open("config.json"))
+            config["slot_scope"]["start"] = int(s)
+            config["slot_scope"]["end"] = int(e)
+            json.dump(config, open("config.json", "w"), indent=2)
+            send(f"Ustawiono zakres godzin slotów {s}-{e}")
+        
+            tg_state["last_update_id"] = last_id
+            json.dump(tg_state, open("telegram_state.json", "w"), indent=2)
+
         elif text == "/help":
             send(
                 "Dostępne komendy:\n\n"
@@ -116,8 +132,6 @@ def handle_commands():
                 "/help – pokazuje tę pomoc"
             )
 
-    tg_state["last_update_id"] = last_id
-    json.dump(tg_state, open("telegram_state.json", "w"), indent=2)
 
 handle_commands()
 
