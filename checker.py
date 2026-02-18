@@ -144,7 +144,7 @@ if open("enabled.txt").read().strip() != "1" and not force_run:
 
 config = json.load(open("config.json"))
 
-slot_scope = config.get("slot_scope", {"start": 15, "end": 23})
+slot_scope = config.get("slot_scope", {"start": 16, "end": 22})
 
 hour = datetime.datetime.now().hour
 if not force_run and not (config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end"]):
@@ -166,6 +166,10 @@ for item in config["urls"]:
         term = a.get("data-termin")
         span = a.find("span")
         time_range = span.get_text(strip=True) if span else "?"
+        start_hour = int(time_range.split(":")[0])
+        
+        if not (slot_scope["start"] <= start_hour <= slot_scope["end"]):
+            continue        
 
         key = f"{item['name']}_{term}"
         currently_visible.add(key)
