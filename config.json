@@ -1,8 +1,8 @@
 {
   "play_time": 4,
   "slot_scope": {
-    "start": 16,
-    "end": 22
+    "start": 15,
+    "end": 15
   },
   "monitor_hours": {
     "start": 15,
@@ -27,11 +27,11 @@
     },
     {
       "name": "Korty u Macieja",
-      "url": "https://kluby.org/umacieja/dostepnosc?typ_obiektu=47&czas_rezerwacji=4"
+      "url": "https://kluby.org/umacieja/dostepnosc?typ_obiektu=47&czas_rezerwacji=2"
     },
     {
       "name": "OSiR Bemowo",
-      "url": "https://kluby.org/osir-bemowo/dostepnosc?typ_obiektu=782&czas_rezerwacji=4"
+      "url": "https://kluby.org/osir-bemowo/dostepnosc?typ_obiektu=782&czas_rezerwacji=2"
     }
   ]
 }
