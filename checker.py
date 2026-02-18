@@ -40,4 +40,182 @@ def handle_commands():
 
         if text == "/start":
             open("enabled.txt", "w").write("1")
-            send("Monitoring włączo
+            send("Monitoring włączony")
+
+        elif text == "/stop":
+            open("enabled.txt", "w").write("0")
+            send("Monitoring zatrzymany")
+
+        elif text.startswith("/set"):
+            parts = text.split()
+            if len(parts) < 2:
+                send("Użycie: /set 4")
+                continue
+
+            val = parts[1]
+            config = json.load(open("config.json"))
+
+            for u in config["urls"]:
+                parsed = urlparse(u["url"])
+                qs = parse_qs(parsed.query)
+                qs["czas_rezerwacji"] = [val]
+
+                new_query = "&".join(
+                    f"{k}={v[0]}" for k, v in qs.items()
+                )
+                base_url = u["url"].split("?")[0]
+                u["url"] = f"{base_url}?{new_query}"
+
+            json.dump(config, open("config.json", "w"), indent=2)
+            send(f"Ustawiono czas_rezerwacji={val}")
+
+        elif text.startswith("/hours"):
+            parts = text.split()
+            if len(parts) < 3:
+                send("Użycie: /hours 16 22")
+                continue
+
+            _, s, e = parts
+            config = json.load(open("config.json"))
+            config["monitor_hours"]["start"] = int(s)
+            config["monitor_hours"]["end"] = int(e)
+            json.dump(config, open("config.json", "w"), indent=2)
+            send(f"Ustawiono godziny działania monitoringu {s}-{e}")
+
+        elif text.startswith("/scope"):
+            parts = text.split()
+            if len(parts) < 3:
+                send("Użycie: /scope 16 22")
+                continue
+
+            _, s, e = parts
+            config = json.load(open("config.json"))
+            config["slot_scope"]["start"] = int(s)
+            config["slot_scope"]["end"] = int(e)
+            json.dump(config, open("config.json", "w"), indent=2)
+            send(f"Ustawiono zakres godzin slotów {s}-{e}")
+
+        elif text == "/list":
+            config = json.load(open("config.json"))
+            lines = ["Monitorowane korty:"]
+            for u in config["urls"]:
+                lines.append(f"- {u['name']}")
+            send("\n".join(lines))
+
+        elif text == "/status":
+            config = json.load(open("config.json"))
+            enabled = open("enabled.txt").read().strip()
+
+            sample_url = config["urls"][0]["url"]
+            qs = parse_qs(urlparse(sample_url).query)
+            duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
+
+            send(
+                "Status monitoringu:\n"
+                f"Aktywny: {'TAK' if enabled == '1' else 'NIE'}\n"
+                f"Godziny działania: {config['monitor_hours']['start']}-{config['monitor_hours']['end']}\n"
+                f"Zakres godzin slotów: {config['slot_scope']['start']}-{config['slot_scope']['end']}\n"
+                f"Długość slotu: {duration}h\n"
+                f"Liczba kortów: {len(config['urls'])}"
+            )
+
+        elif text == "/run":
+            if open("force_run.txt").read().strip() != "1":
+                open("force_run.txt", "w").write("1")
+                send("Wymuszono natychmiastowe sprawdzenie przy następnym uruchomieniu workflow.")
+
+        elif text == "/help":
+            send(
+                "Dostępne komendy:\n\n"
+                "/start – włącza monitoring\n"
+                "/stop – wyłącza monitoring\n"
+                "/status – pokazuje ustawienia\n"
+                "/list – lista monitorowanych kortów\n"
+                "/set N – ustawia czas_rezerwacji (np. /set 4)\n"
+                "/hours H1 H2 – ustawia godziny działania monitoringu\n"
+                "/scope H1 H2 – ustawia zakres godzin slotów\n"
+                "/run – wymusza sprawdzenie\n"
+                "/help – pokazuje tę pomoc"
+            )
+
+    tg_state["last_update_id"] = last_id
+    json.dump(tg_state, open("telegram_state.json", "w"), indent=2)
+
+
+handle_commands()
+
+# ---------- MONITORING ----------
+
+force_run = open("force_run.txt").read().strip() == "1"
+
+if open("enabled.txt").read().strip() != "1" and not force_run:
+    exit()
+
+config = json.load(open("config.json"))
+
+slot_scope = config.get("slot_scope", {"start": 0, "end": 23})
+
+hour = datetime.datetime.now().hour
+if not force_run and not (
+    config["monitor_hours"]["start"] <= hour <= config["monitor_hours"]["end"]
+):
+    exit()
+
+state = json.load(open("state.json"))
+state.setdefault("reported", [])
+
+changed = False
+currently_visible = set()
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml",
+    "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
+}
+
+today = datetime.date.today().strftime("%Y-%m-%d")
+
+for item in config["urls"]:
+    qs = parse_qs(urlparse(item["url"]).query)
+    duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
+
+    ajax_url = f"{item['url']}&data_grafiku={today}"
+
+    r = requests.get(ajax_url, headers=headers, timeout=30)
+    soup = BeautifulSoup(r.text, "html.parser")
+
+    for a in soup.select("a.btn-success"):
+        term = a.get("data-termin")
+        span = a.find("span")
+        time_range = span.get_text(strip=True) if span else "?"
+
+        start_hour = int(time_range.split("-")[0].split(":")[0])
+
+        if not (slot_scope["start"] <= start_hour <= slot_scope["end"]):
+            continue
+
+        key = f"{item['name']}_{term}"
+        currently_visible.add(key)
+
+        if key not in state["reported"]:
+            send(
+                f"Wolny kort: {item['name']}\n"
+                f"Termin: {time_range}\n"
+                f"Długość: {duration}h\n"
+                f"{item['url']}"
+            )
+            state["reported"].append(key)
+            changed = True
+
+# usuwamy sloty które już zniknęły
+new_reported = [k for k in state["reported"] if k in currently_visible]
+
+if len(new_reported) != len(state["reported"]):
+    state["reported"] = new_reported
+    changed = True
+
+if changed:
+    json.dump(state, open("state.json", "w"), indent=2)
+
+if force_run:
+    open("force_run.txt", "w").write("0")
