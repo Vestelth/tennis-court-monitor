@@ -20,7 +20,7 @@ def send(msg):
 
 def handle_commands():
     tg_state = json.load(open("telegram_state.json"))
-
+    
     r = requests.get(
         f"{BASE}/getUpdates",
         params={"offset": tg_state["last_update_id"] + 1}
@@ -157,10 +157,17 @@ changed = False
 currently_visible = set()
 
 for item in config["urls"]:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
+        "Connection": "keep-alive"
+    }
     qs = parse_qs(urlparse(item["url"]).query)
     duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
-
-    r = requests.get(item["url"], timeout=30)
+    r = requests.get(item["url"], headers=headers, timeout=30)
+    
+    send(r.text[:300])
     send(f"DEBUG length HTML: {len(r.text)}")
     
     if "btn-success" in r.text:
