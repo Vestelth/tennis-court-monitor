@@ -161,6 +161,13 @@ for item in config["urls"]:
     duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
 
     r = requests.get(item["url"], timeout=30)
+    send(f"DEBUG length HTML: {len(r.text)}")
+    
+    if "btn-success" in r.text:
+        send("DEBUG: btn-success found in raw HTML")
+    else:
+        send("DEBUG: btn-success NOT found in raw HTML")
+    
     soup = BeautifulSoup(r.text, "html.parser")
 
     for a in soup.select("a.btn-success"):
