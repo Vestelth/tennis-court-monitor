@@ -131,7 +131,7 @@ def handle_commands():
                 "/stop – wyłącza monitoring\n"
                 "/status – pokazuje ustawienia\n"
                 "/list – lista monitorowanych kortów\n"
-                "/set N – ustawia czas_rezerwacji (np. /set 4)\n"
+                "/set N – ustawia czas_rezerwacji\n"
                 "/hours H1 H2 – ustawia godziny działania monitoringu\n"
                 "/scope H1 H2 – ustawia zakres godzin slotów\n"
                 "/run – wymusza sprawdzenie\n"
@@ -169,7 +169,6 @@ currently_visible = set()
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml",
     "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
 }
 
@@ -184,28 +183,50 @@ for item in config["urls"]:
     r = requests.get(ajax_url, headers=headers, timeout=30)
     soup = BeautifulSoup(r.text, "html.parser")
 
-    for a in soup.select("a.btn-success"):
-        term = a.get("data-termin")
-        span = a.find("span")
-        time_range = span.get_text(strip=True) if span else "?"
+    # ---- WYCIĄGAMY DATY Z HEADERA ----
+    headers_row = soup.select("thead th.text-center")
+    dates = []
+    for h in headers_row:
+        text = h.get_text(separator=" ", strip=True)
+        parts = text.split()
+        if len(parts) >= 2:
+            dates.append(parts[-1])  # np. 18/02
 
-        start_hour = int(time_range.split("-")[0].split(":")[0])
+    # ---- ITERUJEMY PO WIERSZACH ----
+    rows = soup.select("tbody tr")
 
-        if not (slot_scope["start"] <= start_hour <= slot_scope["end"]):
+    for row in rows:
+        cells = row.find_all("td")
+        if not cells:
             continue
 
-        key = f"{item['name']}_{term}"
-        currently_visible.add(key)
+        for idx, cell in enumerate(cells[1:]):  # pomijamy kolumnę z godziną
+            a = cell.select_one("a.btn-success")
+            if not a:
+                continue
 
-        if key not in state["reported"]:
-            send(
-                f"Wolny kort: {item['name']}\n"
-                f"Termin: {time_range}\n"
-                f"Długość: {duration}h\n"
-                f"{item['url']}"
-            )
-            state["reported"].append(key)
-            changed = True
+            term = a.get("data-termin")
+            span = a.find("span")
+            time_range = span.get_text(strip=True) if span else "?"
+            start_hour = int(time_range.split("-")[0].split(":")[0])
+
+            if not (slot_scope["start"] <= start_hour <= slot_scope["end"]):
+                continue
+
+            date = dates[idx] if idx < len(dates) else "?"
+            key = f"{item['name']}_{term}"
+            currently_visible.add(key)
+
+            if key not in state["reported"]:
+                send(
+                    f"Wolny kort: {item['name']}\n"
+                    f"Data: {date}\n"
+                    f"Termin: {time_range}\n"
+                    f"Długość: {duration}h\n"
+                    f"{item['url']}"
+                )
+                state["reported"].append(key)
+                changed = True
 
 # usuwamy sloty które już zniknęły
 new_reported = [k for k in state["reported"] if k in currently_visible]
