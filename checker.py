@@ -105,6 +105,7 @@ def handle_commands():
         elif text == "/status":
             config = json.load(open("config.json"))
             enabled = open("enabled.txt").read().strip()
+            slot_scope = config.get("slot_scope", {"start": 0, "end": 23})
 
             sample_url = config["urls"][0]["url"]
             qs = parse_qs(urlparse(sample_url).query)
@@ -114,7 +115,7 @@ def handle_commands():
                 "Status monitoringu:\n"
                 f"Aktywny: {'TAK' if enabled == '1' else 'NIE'}\n"
                 f"Godziny działania: {config['monitor_hours']['start']}-{config['monitor_hours']['end']}\n"
-                f"Zakres godzin slotów: {config['slot_scope']['start']}-{config['slot_scope']['end']}\n"
+                f"Zakres godzin slotów: {slot_scope['start']}-{slot_scope['end']}\n"
                 f"Długość slotu: {duration}h\n"
                 f"Liczba kortów: {len(config['urls'])}"
             )
@@ -152,7 +153,6 @@ if open("enabled.txt").read().strip() != "1" and not force_run:
     exit()
 
 config = json.load(open("config.json"))
-
 slot_scope = config.get("slot_scope", {"start": 0, "end": 23})
 
 hour = datetime.datetime.now().hour
@@ -168,53 +168,61 @@ changed = False
 currently_visible = set()
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36",
+    "User-Agent": "Mozilla/5.0",
     "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
 }
 
 today = datetime.date.today().strftime("%Y-%m-%d")
 
-for item in config['urls']:
-    qs = parse_qs(urlparse(item['url']).query)
+for item in config["urls"]:
+    qs = parse_qs(urlparse(item["url"]).query)
     duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
 
     ajax_url = f"{item['url']}&data_grafiku={today}"
 
     r = requests.get(ajax_url, headers=headers, timeout=30)
+    if r.status_code != 200:
+        continue
+
     soup = BeautifulSoup(r.text, "html.parser")
 
-    # ---- WYCIĄGAMY DATY Z HEADERA ----
     headers_row = soup.select("thead th.text-center")
     dates = []
     for h in headers_row:
         text = h.get_text(separator=" ", strip=True)
         parts = text.split()
         if len(parts) >= 2:
-            dates.append(parts[-1])  # np. 18/02
+            dates.append(parts[-1])
 
-    # ---- ITERUJEMY PO WIERSZACH ----
     rows = soup.select("tbody tr")
+    found_dates = set()
 
     for row in rows:
         cells = row.find_all("td")
         if not cells:
             continue
 
-        for idx, cell in enumerate(cells[1:]):  # pomijamy kolumnę z godziną
+        for idx, cell in enumerate(cells[1:]):
             a = cell.select_one("a.btn-success")
             if not a:
                 continue
 
-            term = a.get("data-termin")
+            date = dates[idx] if idx < len(dates) else "?"
+            if date in found_dates:
+                continue
+
             span = a.find("span")
             time_range = span.get_text(strip=True) if span else "?"
-            start_hour = int(time_range.split("-")[0].split(":")[0])
+
+            try:
+                start_hour = int(time_range.split("-")[0].split(":")[0])
+            except:
+                continue
 
             if not (slot_scope["start"] <= start_hour <= slot_scope["end"]):
                 continue
 
-            date = dates[idx] if idx < len(dates) else "?"
-            key = f"{item['name']}_{term}"
+            key = f"{item['name']}_{date}"
             currently_visible.add(key)
 
             if key not in state["reported"]:
@@ -226,9 +234,10 @@ for item in config['urls']:
                     f"{item['link']}"
                 )
                 state["reported"].append(key)
+                found_dates.add(date)
                 changed = True
 
-# usuwamy sloty które już zniknęły
+# usuwamy dni które już zniknęły
 new_reported = [k for k in state["reported"] if k in currently_visible]
 
 if len(new_reported) != len(state["reported"]):
