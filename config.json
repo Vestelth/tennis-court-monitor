@@ -11,18 +11,18 @@
   "urls": [
     {
       "name": "Spojnia Gorna",
-      "link": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=188&czas_rezerwacji=2"
+      "link": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=188&czas_rezerwacji=4",
       "url": "https://kluby.org/klub/ajax/dostepne_korty_wybrany_typ.php?klub=86&id_strony_klubu=60&czy_dedykowane=0&typ_obiektu=188&czas_rezerwacji=4"
     },
     {
       "name": "Spojnia Gorna - smart court",
-      "link": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=1032&czas_rezerwacji=4"
+      "link": "https://kluby.org/spojnia-gorna/dostepnosc?typ_obiektu=1032&czas_rezerwacji=4",
       "url": "https://kluby.org/klub/ajax/dostepne_korty_wybrany_typ.php?klub=86&id_strony_klubu=60&czy_dedykowane=0&typ_obiektu=1032&czas_rezerwacji=4"
     },
     
     {
       "name": "Morelowa - maczka",
-      "link": "https://kluby.org/mtc/dostepnosc?typ_obiektu=34&czas_rezerwacji=4"
+      "link": "https://kluby.org/mtc/dostepnosc?typ_obiektu=34&czas_rezerwacji=4",
       "url": "https://kluby.org/klub/ajax/dostepne_korty_wybrany_typ.php?klub=14&id_strony_klubu=14&czy_dedykowane=0&typ_obiektu=34&czas_rezerwacji=4"
     },
     {
@@ -38,7 +38,7 @@
     
     {
       "name": "Korty u Macieja",
-      "link": "https://kluby.org/umacieja/dostepnosc?typ_obiektu=47&czas_rezerwacji=4" 
+      "link": "https://kluby.org/umacieja/dostepnosc?typ_obiektu=47&czas_rezerwacji=4",
       "url": "https://kluby.org/klub/ajax/dostepne_korty_wybrany_typ_termin.php?klub=15&id_strony_klubu=15&czy_dedykowane=0&typ_obiektu=47&czas_rezerwacji=4"
     },
     
