@@ -174,8 +174,8 @@ headers = {
 
 today = datetime.date.today().strftime("%Y-%m-%d")
 
-for item in config["urls"]:
-    qs = parse_qs(urlparse(item["url"]).query)
+for item in config['urls']:
+    qs = parse_qs(urlparse(item['url']).query)
     duration = int(qs.get("czas_rezerwacji", ["2"])[0]) * 0.5
 
     ajax_url = f"{item['url']}&data_grafiku={today}"
@@ -223,7 +223,7 @@ for item in config["urls"]:
                     f"Data: {date}\n"
                     f"Termin: {time_range}\n"
                     f"Długość: {duration}h\n"
-                    f"{item['url']}"
+                    f"{item['link']}"
                 )
                 state["reported"].append(key)
                 changed = True
