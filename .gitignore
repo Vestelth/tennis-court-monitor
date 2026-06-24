@@ -1,0 +1,9 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# runtime state (kept out of git in v2 — patrz store.py / SQLite)
+*.db
+*.sqlite3
