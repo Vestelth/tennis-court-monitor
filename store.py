@@ -15,6 +15,7 @@ _DEFAULTS = {
     "scope_end": "23",
     "hours_start": "0",
     "hours_end": "23",
+    "last_update_id": "0",
 }
 
 
@@ -70,6 +71,13 @@ class Store:
     def set_monitor_hours(self, start: int, end: int) -> None:
         self._set("hours_start", str(start))
         self._set("hours_end", str(end))
+
+    @property
+    def last_update_id(self) -> int:
+        return int(self._get("last_update_id"))
+
+    def set_last_update_id(self, value: int) -> None:
+        self._set("last_update_id", str(value))
 
     # ---------- zgłoszone sloty ----------
 

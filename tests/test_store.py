@@ -65,3 +65,9 @@ def test_monitor_hours_defaults_and_set(store):
     assert store.monitor_hours == (0, 23)
     store.set_monitor_hours(16, 22)
     assert store.monitor_hours == (16, 22)
+
+
+def test_last_update_id_defaults_zero_and_set(store):
+    assert store.last_update_id == 0
+    store.set_last_update_id(42)
+    assert store.last_update_id == 42
