@@ -41,10 +41,10 @@ def test_mark_reported(store):
     assert store.is_reported("Spojnia_24/06") is True
 
 
-def test_prune_removes_keys_no_longer_visible(store):
+def test_discard_reported_removes_only_given_keys(store):
     store.mark_reported("Spojnia_24/06")
     store.mark_reported("Spojnia_25/06")
-    store.prune_reported({"Spojnia_25/06"})
+    store.discard_reported({"Spojnia_24/06"})
     assert store.is_reported("Spojnia_24/06") is False
     assert store.is_reported("Spojnia_25/06") is True
 

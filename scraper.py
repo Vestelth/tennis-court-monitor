@@ -30,7 +30,10 @@ def fetch_grid(
     """
     sep = "&" if "?" in court.url else "?"
     url = f"{court.url}{sep}data_grafiku={date}"
-    response = getter(url, headers=_HEADERS, timeout=30)
+    try:
+        response = getter(url, headers=_HEADERS, timeout=30)
+    except (requests.RequestException, OSError):
+        return None
     if response.status_code != 200:
         return None
     return response.text

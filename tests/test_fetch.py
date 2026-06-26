@@ -34,3 +34,10 @@ def test_fetch_grid_returns_none_on_error_status():
         return FakeResponse(status_code=503, text="boom")
 
     assert fetch_grid(_court(), "2026-06-24", getter=getter) is None
+
+
+def test_fetch_grid_returns_none_on_request_exception():
+    def getter(url, **kwargs):
+        raise ConnectionError("network down")
+
+    assert fetch_grid(_court(), "2026-06-24", getter=getter) is None

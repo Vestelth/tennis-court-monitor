@@ -1,4 +1,4 @@
-from service import should_scan
+from service import local_now, should_scan
 
 HOURS = (16, 22)
 
@@ -35,3 +35,9 @@ def test_interval_not_elapsed_does_not_scan():
 
 def test_enabled_in_hours_and_interval_elapsed_scans():
     assert should_scan(**_kwargs(now=1000.0, last_scan=100.0, interval=600)) is True
+
+
+def test_local_now_is_warsaw_aware():
+    now = local_now()
+    assert now.tzinfo is not None
+    assert str(now.tzinfo) == "Europe/Warsaw"

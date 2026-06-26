@@ -96,11 +96,10 @@ class Store:
     def reported_keys(self) -> set[str]:
         return {row[0] for row in self._conn.execute("SELECT key FROM reported")}
 
-    def prune_reported(self, visible: set[str]) -> None:
-        """Usuwa zgłoszone klucze, których już nie ma na grafiku."""
-        stale = self.reported_keys() - visible
+    def discard_reported(self, keys: set[str]) -> None:
+        """Usuwa wskazane klucze ze zgłoszonych (np. sloty, które zniknęły)."""
         self._conn.executemany(
-            "DELETE FROM reported WHERE key = ?", ((k,) for k in stale)
+            "DELETE FROM reported WHERE key = ?", ((k,) for k in keys)
         )
         self._conn.commit()
 
