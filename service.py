@@ -20,7 +20,7 @@ from app import scan_once
 from commands import handle_command
 from config import load_courts
 from notifier import TelegramNotifier
-from scraper import fetch_grid
+from sources import fetch_html
 from store import Store
 
 BASE_DIR = Path(__file__).parent
@@ -82,7 +82,7 @@ def run() -> None:  # pragma: no cover - pętla sieciowa, weryfikowana przy depl
     store = Store(DB_PATH)
     notifier = TelegramNotifier(token, chat_id)
     session = requests.Session()
-    fetch = lambda court, today: fetch_grid(court, today, getter=session.get)
+    fetch = lambda court, today: fetch_html(court, today, getter=session.get)
 
     log.info("Start usługi, %d kortów, monitoring=%s", len(courts), store.enabled)
     last_scan = 0.0

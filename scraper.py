@@ -5,38 +5,9 @@ wszystkich wolnych slotów. Filtrowanie po zakresie godzin i deduplikację
 zostawiamy warstwie wyżej (app/store) — tu chodzi tylko o wierne odczytanie grafiku.
 """
 
-from typing import Callable, Optional
-
-import requests
 from bs4 import BeautifulSoup
 
-from models import Court, Slot
-
-_HEADERS = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept-Language": "pl-PL,pl;q=0.9,en;q=0.8",
-}
-
-
-def fetch_grid(
-    court: Court,
-    date: str,
-    getter: Callable[..., object] = requests.get,
-) -> Optional[str]:
-    """Pobiera HTML grafiku kortu na dany dzień ("YYYY-MM-DD").
-
-    Zwraca tekst odpowiedzi albo None, gdy serwer nie odpowie 200.
-    getter jest wstrzykiwany dla testowalności (domyślnie requests.get).
-    """
-    sep = "&" if "?" in court.url else "?"
-    url = f"{court.url}{sep}data_grafiku={date}"
-    try:
-        response = getter(url, headers=_HEADERS, timeout=30)
-    except (requests.RequestException, OSError):
-        return None
-    if response.status_code != 200:
-        return None
-    return response.text
+from models import Slot
 
 
 def parse_free_slots(html: str) -> list[Slot]:

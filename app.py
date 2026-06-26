@@ -10,7 +10,7 @@ from typing import Callable, Iterable
 from models import Court
 from monitor import notifiable_slots, slot_key, visible_keys
 from notifier import format_slot_message
-from scraper import fetch_grid, parse_free_slots
+from sources import fetch_html, parse_slots
 
 
 def scan_once(
@@ -18,7 +18,7 @@ def scan_once(
     store,
     notifier,
     today: str,
-    fetch: Callable[[Court, str], "str | None"] = fetch_grid,
+    fetch: Callable[[Court, str], "str | None"] = fetch_html,
 ) -> int:
     """Wykonuje jeden przebieg skanu. Zwraca liczbę wysłanych powiadomień."""
     scope = store.slot_scope
@@ -33,7 +33,7 @@ def scan_once(
             continue
         scanned_names.append(court.name)
 
-        slots = parse_free_slots(html)
+        slots = parse_slots(court, html)
         visible |= visible_keys(court.name, slots, scope)
 
         for slot in notifiable_slots(court.name, slots, scope, store.reported_keys()):

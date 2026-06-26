@@ -22,11 +22,32 @@ SAMPLE = {
 }
 
 
+GANADOR_SAMPLE = {
+    "urls": [
+        {
+            "name": "Ganador – trawa",
+            "type": "ganador",
+            "surface": "TRAWA",
+            "link": "https://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis",
+            "url": "https://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis",
+        }
+    ]
+}
+
+
 @pytest.fixture
 def config_path(tmp_path):
     p = tmp_path / "config.json"
     p.write_text(json.dumps(SAMPLE), encoding="utf-8")
     return p
+
+
+def test_load_courts_reads_type_and_surface(tmp_path):
+    p = tmp_path / "config.json"
+    p.write_text(json.dumps(GANADOR_SAMPLE), encoding="utf-8")
+    court = load_courts(p)[0]
+    assert court.type == "ganador"
+    assert court.surface == "TRAWA"
 
 
 def test_load_courts_returns_all(config_path):
@@ -51,3 +72,9 @@ def test_court_duration_hours_from_czas_rezerwacji():
 def test_court_duration_defaults_when_missing():
     court = Court(name="a", link="x", url="https://x?typ_obiektu=1")
     assert court.duration_hours == 1.0
+
+
+def test_court_defaults_to_kluby_type():
+    court = Court(name="a", link="x", url="https://x")
+    assert court.type == "kluby"
+    assert court.surface is None

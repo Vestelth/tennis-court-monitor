@@ -14,6 +14,8 @@ class Court:
     name: str
     link: str
     url: str
+    type: str = "kluby"  # "kluby" | "ganador"
+    surface: str | None = None  # tylko ganador: "TRAWA" | "MĄCZKA"
 
     @property
     def duration_hours(self) -> float:

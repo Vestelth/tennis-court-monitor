@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <link rel="icon" href="img/favicon.ico">
+        <title>Ganador Sport - Kompleks Sportowy - Strefa klienta</title>
+        
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="js/datepicker/css/datepicker.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+	<script type="text/javascript" src="//use.typekit.net/gzj7nwa.js"></script>
+	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    </head>
+    <body>
+        <div id="panel">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-right">
+                                                    <a href="index.php?s=rejestracja">Rejestracja</a>
+                            <a href="index.php?s=logowanie">Logowanie</a>
+                                            </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-default navbar-ganador" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="http://www.ganadorsport.pl/" target="_blank"><img src="img/logo.png"></a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-right navbar-nav">
+                        <li><a href="index.php">Start</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Zajęcia grupowe</a>
+                            <ul class="dropdown-menu" role="menu">
+								
+                                <li><a href="index.php?s=grafik_zajec_niebieska">Grupa Niebieska</a></li>
+                                <li><a href="index.php?s=grafik_zajec_czerwona">Grupa Czerwona</a></li>
+                                <li><a href="index.php?s=grafik_zajec_zielona">Grupa Zielona</a></li>
+								<li><a href="index.php?s=grafik_zajec_zolta">Grupa Żółta</a></li>
+                                <li><a href="index.php?s=grafik_zajec_zolta_plus">Grupa Żółta Plus</a></li>
+                                <!-- <li><a href="index.php?s=grafik_zajec_sportowa-2009-2010">Grupa Sportowa 2009-2010</a></li> -->
+                                <li><a href="index.php?s=grafik_zajec_sportowa">Grupa Ultra Active</a></li>
+								<li><a href="index.php?s=grafik_zajec_dorosli">Grupa Dorośli</a></li>
+								<li><a href="index.php?s=grafik_zajec_badminton">Grupa Badminton</a></li>
+								
+								<!--<li class="divider"></li>
+                                <li><a href="index.php?s=akademia_cennik">Cennik</a></li> -->
+                            </ul>
+                        </li>
+						 <li>
+                            <a class="active"href="index.php?s=grafik_zajec_tenis" >Korty tenisowe</a>
+                        </li>
+						<li>
+                            <a href="index.php?s=grafik_zajec_korty_badminton" >Korty badmintonowe</a>
+                        </li>
+<!--
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle active" data-toggle="dropdown">Korty tenisowe</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="index.php?s=grafik_zajec_tenis">Rezerwacja</a></li>
+                                <li class="divider"></li>
+                                <li><a href="index.php?s=tenis_cennik">Cennik</a></li>
+                            </ul>
+                        </li> 
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Korty badmintonowe</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="index.php?s=grafik_zajec_badminton">Rezerwacja</a></li>
+                                <li class="divider"></li>
+                                <li><a href="index.php?s=badminton_cennik">Cennik</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Piłka nożna</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="index.php?s=pilka_rezerwacja">Rezerwacja</a></li>
+                                <li class="divider"></li>
+                                <li><a href="index.php?s=pilka_cennik">Cennik</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Beach</a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="index.php?s=grafik_zajec_beach">Rezerwacja</a></li>
+                                <li class="divider"></li>
+                                <li><a href="index.php?s=beach_cennik">Cennik</a></li>
+                            </ul>
+                        </li>
+-->
+                        <li>
+                            <a href="index.php?s=cennik" >Karnety</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container container-main">
+            <div class="col-xs-12">
+    <h1 class="page-header">Korty tenisowe</h1>
+            <div class="clearfix">
+            <h3>piątek, 2026-06-26                <div class="btn-group pull-right btn-group-nav">
+                    <a href="#" type="button" class="btn btn-link tooltip-fn" style="color:#444"><span class="glyphicon glyphicon-calendar input-group date"></span></a>
+                                       <a href="index.php?s=grafik_zajec_tenis&date=2026-06-27" type="button" class="btn btn-link" style="color:#444"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                </div>
+            </h3>
+        </div>
+        <div class="table-responsive">
+        <div id="i-table-h" class="clearfix">
+            
+                        
+            <div class="clearfix">
+                <div class="i-table-h-hour-line caption"></div>
+                                    <div class="i-table-h-hour-line">7:00</div>
+                                    <div class="i-table-h-hour-line">8:00</div>
+                                    <div class="i-table-h-hour-line">9:00</div>
+                                    <div class="i-table-h-hour-line">10:00</div>
+                                    <div class="i-table-h-hour-line">11:00</div>
+                                    <div class="i-table-h-hour-line">12:00</div>
+                                    <div class="i-table-h-hour-line">13:00</div>
+                                    <div class="i-table-h-hour-line">14:00</div>
+                                    <div class="i-table-h-hour-line">15:00</div>
+                                    <div class="i-table-h-hour-line">16:00</div>
+                                    <div class="i-table-h-hour-line">17:00</div>
+                                    <div class="i-table-h-hour-line">18:00</div>
+                                    <div class="i-table-h-hour-line">19:00</div>
+                                    <div class="i-table-h-hour-line">20:00</div>
+                                    <div class="i-table-h-hour-line">21:00</div>
+                                    <div class="i-table-h-hour-line">22:00</div>
+                            </div>
+            <div class="clearfix">
+                <div id="i-table-h-col-1" class="clearfix">
+                                            <div class="i-table-h-event-caption">KORT1 TRAWA</div>
+                                            <div class="i-table-h-event-caption">KORT2 TRAWA</div>
+                                            <div class="i-table-h-event-caption">KORT3 TRAWA</div>
+                                            <div class="i-table-h-event-caption">KORT4 TRAWA</div>
+                                            <div class="i-table-h-event-caption">KORT5 MĄCZKA</div>
+                                            <div class="i-table-h-event-caption">KORT6 MĄCZKA</div>
+                                    </div>
+                <div id="i-table-h-col-2" class="clearfix">
+                                                                    <div class="i-table-h-event-row clearfix">
+                                                                                        <div class="i-table-h-event-body red" data-start="420" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="480" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="540" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="600" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="660" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="720" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="780" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="840" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="900" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="960" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1020" data-link="index.php?s=rezerwacja&id=12987&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1080" data-link="index.php?s=rezerwacja&id=12987&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1140" data-link="index.php?s=rezerwacja&id=12987&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1200" data-link="index.php?s=rezerwacja&id=12987&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1260" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1320" data-link="index.php?s=rezerwacja&id=12987&t=2026-06-26"></div>
+                                                    </div>
+                                                                    <div class="i-table-h-event-row clearfix">
+                                                                                        <div class="i-table-h-event-body red" data-start="420" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="480" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="540" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="600" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="660" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="720" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="780" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="840" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="900" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="960" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1020" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1080" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1140" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1200" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1260" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1320" data-link="index.php?s=rezerwacja&id=12988&t=2026-06-26"></div>
+                                                    </div>
+                                                                    <div class="i-table-h-event-row clearfix">
+                                                                                        <div class="i-table-h-event-body red" data-start="420" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="480" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="540" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="600" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="660" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="720" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="780" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="840" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="900" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="960" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1020" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1080" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1140" data-link="index.php?s=rezerwacja&id=12989&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1200" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1260" data-link="index.php?s=rezerwacja&id=12989&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1320" data-link="index.php?s=rezerwacja&id=12989&t=2026-06-26"></div>
+                                                    </div>
+                                                                    <div class="i-table-h-event-row clearfix">
+                                                                                        <div class="i-table-h-event-body red" data-start="420" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="480" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="540" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="600" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="660" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="720" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="780" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="840" data-link="index.php?s=rezerwacja&id=12990&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="900" data-link="index.php?s=rezerwacja&id=12990&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="960" data-link="index.php?s=rezerwacja&id=12990&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1020" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1080" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1140" data-link="index.php?s=rezerwacja&id=12990&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1200" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1260" data-link="index.php?s=rezerwacja&id=12990&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1320" data-link="index.php?s=rezerwacja&id=12990&t=2026-06-26"></div>
+                                                    </div>
+                                                                    <div class="i-table-h-event-row clearfix">
+                                                                                        <div class="i-table-h-event-body red" data-start="420" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="480" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="540" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="600" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="660" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="720" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="780" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="840" data-link="index.php?s=rezerwacja&id=12991&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="900" data-link="index.php?s=rezerwacja&id=12991&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="960" data-link="index.php?s=rezerwacja&id=12991&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1020" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1080" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1140" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1200" data-link="index.php?s=rezerwacja&id=12991&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1260" data-link="index.php?s=rezerwacja&id=12991&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1320" data-link="index.php?s=rezerwacja&id=12991&t=2026-06-26"></div>
+                                                    </div>
+                                                                    <div class="i-table-h-event-row clearfix">
+                                                                                        <div class="i-table-h-event-body red" data-start="420" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="480" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="540" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="600" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="660" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="720" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="780" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="840" data-link="index.php?s=rezerwacja&id=12992&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="900" data-link="index.php?s=rezerwacja&id=12992&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="960" data-link="index.php?s=rezerwacja&id=12992&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1020" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1080" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1140" data-link="index.php?s=rezerwacja&id=12992&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body red" data-start="1200" data-link="index.php?s=rezerwacja&id=&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1260" data-link="index.php?s=rezerwacja&id=12992&t=2026-06-26"></div>
+                                                            <div class="i-table-h-event-body green" data-start="1320" data-link="index.php?s=rezerwacja&id=12992&t=2026-06-26"></div>
+                                                    </div>
+                                    </div>
+            </div>
+                
+                            
+        </div>
+        </div>
+        <br>
+    <a href="http://www.fitnet.pl" target="_blank"><img src="img/fitnet2.png"></a>
+<!--    <pre>stdClass Object
+(
+    [ListaZajecWHarmonogramie1DzienResult] => stdClass Object
+        (
+            [HarmonogramZajeciaIndywidualne] => Array
+                (
+                    [0] => stdClass Object
+                        (
+                            [DataObowiazywaniaDo] => 
+                            [DataObowiazywaniaOd] => 
+                            [DzienTygodnia] => piątek
+                            [GodzinaKoniec] => PT23H
+                            [GodzinaKoniecInt] => 2300
+                            [GodzinaStart] => PT7H
+                            [GodzinaStartInt] => 700
+                            [IdZajecia] => 12987
+                            [IloscWolnychMiejscWZajeciachGrupowych] => 
+                            [Instruktor] => 
+                            [InstruktorZastepstwo] => 
+                            [KodZajec] => 
+                            [Kolor] => 
+                            [KolorNiedostepnosci] => 
+                            [LiczbaRezerwacji] => 0
+                            [MozliwoscPrzekroczeniaLimitu] => 0
+                            [Nazwa] => KORT1 TRAWA
+                            [NiedostepneInfo] => 
+                            [Note] => 
+                            [NumerDniaTygodnia] => 5
+                            [Online] => 
+                            [Opis] => 
+                            [OpisyZajIndywidualnych] => 
+                            [ParametryRezerwacjiWeb] => 0
+                            [PokazJakoNiedostepne] => 
+                            [PozycjaNaLiscieRezerwowej] => 
+                            [Schedule] => 
+                            [TypZajec] => I
+                            [DzienData] => 0001-01-01T00:00:00
+                            [OpisyRezerwacji] => stdClass Object
+                                (
+                                )
+
+                            [ProcentZajetosci] => 0
+                            [ZakresWolnychGodzin] => stdClass Object
+                                (
+                                    [ZakresWolnychGodzin] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2030
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1700
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12987
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [1] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2300
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 2200
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12987
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [1] => stdClass Object
+                        (
+                            [DataObowiazywaniaDo] => 
+                            [DataObowiazywaniaOd] => 
+                            [DzienTygodnia] => piątek
+                            [GodzinaKoniec] => PT23H
+                            [GodzinaKoniecInt] => 2300
+                            [GodzinaStart] => PT7H
+                            [GodzinaStartInt] => 700
+                            [IdZajecia] => 12988
+                            [IloscWolnychMiejscWZajeciachGrupowych] => 
+                            [Instruktor] => 
+                            [InstruktorZastepstwo] => 
+                            [KodZajec] => 
+                            [Kolor] => 
+                            [KolorNiedostepnosci] => 
+                            [LiczbaRezerwacji] => 0
+                            [MozliwoscPrzekroczeniaLimitu] => 0
+                            [Nazwa] => KORT2 TRAWA
+                            [NiedostepneInfo] => 
+                            [Note] => 
+                            [NumerDniaTygodnia] => 5
+                            [Online] => 
+                            [Opis] => 
+                            [OpisyZajIndywidualnych] => 
+                            [ParametryRezerwacjiWeb] => 0
+                            [PokazJakoNiedostepne] => 
+                            [PozycjaNaLiscieRezerwowej] => 
+                            [Schedule] => 
+                            [TypZajec] => I
+                            [DzienData] => 0001-01-01T00:00:00
+                            [OpisyRezerwacji] => stdClass Object
+                                (
+                                )
+
+                            [ProcentZajetosci] => 0
+                            [ZakresWolnychGodzin] => stdClass Object
+                                (
+                                    [ZakresWolnychGodzin] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2300
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1443
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12988
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [2] => stdClass Object
+                        (
+                            [DataObowiazywaniaDo] => 
+                            [DataObowiazywaniaOd] => 
+                            [DzienTygodnia] => piątek
+                            [GodzinaKoniec] => PT23H
+                            [GodzinaKoniecInt] => 2300
+                            [GodzinaStart] => PT7H
+                            [GodzinaStartInt] => 700
+                            [IdZajecia] => 12989
+                            [IloscWolnychMiejscWZajeciachGrupowych] => 
+                            [Instruktor] => 
+                            [InstruktorZastepstwo] => 
+                            [KodZajec] => 
+                            [Kolor] => 
+                            [KolorNiedostepnosci] => 
+                            [LiczbaRezerwacji] => 0
+                            [MozliwoscPrzekroczeniaLimitu] => 0
+                            [Nazwa] => KORT3 TRAWA
+                            [NiedostepneInfo] => 
+                            [Note] => 
+                            [NumerDniaTygodnia] => 5
+                            [Online] => 
+                            [Opis] => 
+                            [OpisyZajIndywidualnych] => 
+                            [ParametryRezerwacjiWeb] => 0
+                            [PokazJakoNiedostepne] => 
+                            [PozycjaNaLiscieRezerwowej] => 
+                            [Schedule] => 
+                            [TypZajec] => I
+                            [DzienData] => 0001-01-01T00:00:00
+                            [OpisyRezerwacji] => stdClass Object
+                                (
+                                )
+
+                            [ProcentZajetosci] => 0
+                            [ZakresWolnychGodzin] => stdClass Object
+                                (
+                                    [ZakresWolnychGodzin] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2000
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1900
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12989
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [1] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2300
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 2100
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12989
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [3] => stdClass Object
+                        (
+                            [DataObowiazywaniaDo] => 
+                            [DataObowiazywaniaOd] => 
+                            [DzienTygodnia] => piątek
+                            [GodzinaKoniec] => PT23H
+                            [GodzinaKoniecInt] => 2300
+                            [GodzinaStart] => PT7H
+                            [GodzinaStartInt] => 700
+                            [IdZajecia] => 12990
+                            [IloscWolnychMiejscWZajeciachGrupowych] => 
+                            [Instruktor] => 
+                            [InstruktorZastepstwo] => 
+                            [KodZajec] => 
+                            [Kolor] => 
+                            [KolorNiedostepnosci] => 
+                            [LiczbaRezerwacji] => 0
+                            [MozliwoscPrzekroczeniaLimitu] => 0
+                            [Nazwa] => KORT4 TRAWA
+                            [NiedostepneInfo] => 
+                            [Note] => 
+                            [NumerDniaTygodnia] => 5
+                            [Online] => 
+                            [Opis] => 
+                            [OpisyZajIndywidualnych] => 
+                            [ParametryRezerwacjiWeb] => 0
+                            [PokazJakoNiedostepne] => 
+                            [PozycjaNaLiscieRezerwowej] => 
+                            [Schedule] => 
+                            [TypZajec] => I
+                            [DzienData] => 0001-01-01T00:00:00
+                            [OpisyRezerwacji] => stdClass Object
+                                (
+                                )
+
+                            [ProcentZajetosci] => 0
+                            [ZakresWolnychGodzin] => stdClass Object
+                                (
+                                    [ZakresWolnychGodzin] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 1700
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1443
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12990
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [1] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2000
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1900
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12990
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [2] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2300
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 2130
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12990
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [4] => stdClass Object
+                        (
+                            [DataObowiazywaniaDo] => 
+                            [DataObowiazywaniaOd] => 2016-09-23T00:00:00
+                            [DzienTygodnia] => piątek
+                            [GodzinaKoniec] => PT23H
+                            [GodzinaKoniecInt] => 2300
+                            [GodzinaStart] => PT7H
+                            [GodzinaStartInt] => 700
+                            [IdZajecia] => 12991
+                            [IloscWolnychMiejscWZajeciachGrupowych] => 
+                            [Instruktor] => 
+                            [InstruktorZastepstwo] => 
+                            [KodZajec] => 
+                            [Kolor] => 
+                            [KolorNiedostepnosci] => 
+                            [LiczbaRezerwacji] => 0
+                            [MozliwoscPrzekroczeniaLimitu] => 0
+                            [Nazwa] => KORT5 MĄCZKA
+                            [NiedostepneInfo] => 
+                            [Note] => 
+                            [NumerDniaTygodnia] => 5
+                            [Online] => 
+                            [Opis] => 
+                            [OpisyZajIndywidualnych] => 
+                            [ParametryRezerwacjiWeb] => 0
+                            [PokazJakoNiedostepne] => 
+                            [PozycjaNaLiscieRezerwowej] => 
+                            [Schedule] => 
+                            [TypZajec] => I
+                            [DzienData] => 0001-01-01T00:00:00
+                            [OpisyRezerwacji] => stdClass Object
+                                (
+                                )
+
+                            [ProcentZajetosci] => 0
+                            [ZakresWolnychGodzin] => stdClass Object
+                                (
+                                    [ZakresWolnychGodzin] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 1700
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1443
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12991
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [1] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2300
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 2030
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12991
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [5] => stdClass Object
+                        (
+                            [DataObowiazywaniaDo] => 
+                            [DataObowiazywaniaOd] => 2016-09-23T00:00:00
+                            [DzienTygodnia] => piątek
+                            [GodzinaKoniec] => PT23H
+                            [GodzinaKoniecInt] => 2300
+                            [GodzinaStart] => PT7H
+                            [GodzinaStartInt] => 700
+                            [IdZajecia] => 12992
+                            [IloscWolnychMiejscWZajeciachGrupowych] => 
+                            [Instruktor] => 
+                            [InstruktorZastepstwo] => 
+                            [KodZajec] => 
+                            [Kolor] => 
+                            [KolorNiedostepnosci] => 
+                            [LiczbaRezerwacji] => 0
+                            [MozliwoscPrzekroczeniaLimitu] => 0
+                            [Nazwa] => KORT6 MĄCZKA
+                            [NiedostepneInfo] => 
+                            [Note] => 
+                            [NumerDniaTygodnia] => 5
+                            [Online] => 
+                            [Opis] => 
+                            [OpisyZajIndywidualnych] => 
+                            [ParametryRezerwacjiWeb] => 0
+                            [PokazJakoNiedostepne] => 
+                            [PozycjaNaLiscieRezerwowej] => 
+                            [Schedule] => 
+                            [TypZajec] => I
+                            [DzienData] => 0001-01-01T00:00:00
+                            [OpisyRezerwacji] => stdClass Object
+                                (
+                                )
+
+                            [ProcentZajetosci] => 0
+                            [ZakresWolnychGodzin] => stdClass Object
+                                (
+                                    [ZakresWolnychGodzin] => Array
+                                        (
+                                            [0] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 1700
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1443
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12992
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [1] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2000
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 1900
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12992
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                            [2] => stdClass Object
+                                                (
+                                                    [GodzinaDo] => 2300
+                                                    [GodzinaKoniecInt] => 2300
+                                                    [GodzinaOd] => 2130
+                                                    [GodzinaStartInt] => 700
+                                                    [IdZajecia] => 12992
+                                                    [Kolor] => 
+                                                    [NiedostepneInfo] => 
+                                                    [ParametryRezerwacjiWeb] => 0
+                                                    [PokazJakoNiedostepne] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+        )
+
+)
+1</pre>-->
+</div>            <div class="col-xs-12">
+            <br><br>
+            </div>
+        </div> <!--/container -->
+        <!--Bootstrap core JavaScript
+        ================================================== -->
+        <!--Placed at the end of the document so the pages load faster -->
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/datepicker/js/bootstrap-datepicker.js"></script>
+        <script src="js/datepicker/js/locales/bootstrap-datepicker.pl.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.list-table-event, .list-list-event, .i-table-h-event-body.green').click(function (e) {
+                    window.location.href = $(this).attr('data-link');
+                });
+
+                $('.list-table-event, .i-table-event, .i-table-h-event-body.green').click(function (e) {
+                    var posX = $(this).offset().left,
+                            posY = $(this).offset().top;
+                    var pos = e.pageY - posY;
+                    window.location.href = $(this).attr('data-link') + "&pos=" + pos + "&h=" + $(this).attr('data-start');
+                });
+
+                $('#checkbox_0').click(function () {
+                    $('.check').prop('checked', this.checked);
+                });
+
+                $('.checkall').click(function () {
+                    $('.check').prop('checked', this.checked);
+                });
+
+                $('.cancel').click(function (e) {
+                    var r = confirm("UWAGA! Zamierzasz anulować rezerwację. Jesteś pewien?");
+                    if (r == true)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
+            });
+            $('.input-group.date').datepicker({
+                format: "yyyy-mm-dd",
+                todayBtn: "linked",
+                language: "pl",
+                autoclose: true,
+                todayHighlight: true
+            }).on('changeDate', function (ev) {
+                window.location.href = 'http://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis&date=' + ev.format();
+            });
+            $('#BirthDate').datepicker({
+                format: "yyyy-mm-dd",
+                language: "pl",
+                autoclose: true
+            });
+
+            $('.popover-fn').popover();
+            $('.tooltip-fn').tooltip();
+
+            $('#btn-filter').on('click', 'a', function (e) {
+                e.preventDefault();
+                $(this).toggleClass('active');
+                $('.list-entry').addClass('off');
+                $('#btn-filter a.active').each(function () {
+                    var id = $(this).attr('data-class');
+                    $('.list-entry.' + id).toggleClass('off');
+                });
+                if ($('#btn-filter a.active').length == 0)
+                    $('.list-entry').removeClass('off');
+            });
+
+        </script>
+            </body>
+</html>

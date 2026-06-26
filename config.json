@@ -43,6 +43,20 @@
       "name": "OSiR Bemowo",
       "link": "https://kluby.org/osir-bemowo/dostepnosc?&czas_rezerwacji=4",
       "url": "https://kluby.org/klub/ajax/dostepne_korty_wybrany_typ.php?klub=469&id_strony_klubu=919&czy_dedykowane=0&typ_obiektu=782&czas_rezerwacji=4"
+    },
+    {
+      "name": "Ganador – trawa",
+      "type": "ganador",
+      "surface": "TRAWA",
+      "link": "https://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis",
+      "url": "https://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis"
+    },
+    {
+      "name": "Ganador – mączka",
+      "type": "ganador",
+      "surface": "MĄCZKA",
+      "link": "https://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis",
+      "url": "https://ganadorsport.pl/rezerwacja-online/index.php?s=grafik_zajec_tenis"
     }
   ]
 }

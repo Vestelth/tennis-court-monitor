@@ -13,6 +13,12 @@ from models import Court
 def load_courts(path: str | Path) -> list[Court]:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     return [
-        Court(name=item["name"], link=item["link"], url=item["url"])
+        Court(
+            name=item["name"],
+            link=item["link"],
+            url=item["url"],
+            type=item.get("type", "kluby"),
+            surface=item.get("surface"),
+        )
         for item in data["urls"]
     ]
