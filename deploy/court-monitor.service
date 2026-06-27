@@ -1,0 +1,23 @@
+[Unit]
+Description=Tennis court monitor (kluby.org + Ganador) — skaner slotow + bot Telegram
+Documentation=https://github.com/Vestelth/tennis-court-monitor
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# __DEST__ jest podstawiany przez deploy.sh na faktyczna sciezke instalacji
+WorkingDirectory=__DEST__
+EnvironmentFile=/etc/court-monitor.env
+ExecStart=__DEST__/.venv/bin/python service.py
+Restart=on-failure
+RestartSec=10
+# stan SQLite (state.db) zapisywany w WorkingDirectory; nie jest w gicie
+
+# minimalny hardening (proces nie potrzebuje uprawnien poza siecia i swoim katalogiem)
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
