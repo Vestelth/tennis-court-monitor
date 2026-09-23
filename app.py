@@ -1,15 +1,17 @@
 """Spinka jednego przebiegu skanu (bez pętli/harmonogramu — to Etap 3).
 
 scan_once dla każdego kortu: pobiera grafik, parsuje wolne sloty, wybiera te
-warte powiadomienia (zakres godzin, pierwszy na dzień, niezgłoszone), wysyła
-powiadomienia, zapisuje je jako zgłoszone i sprząta klucze, których już nie ma.
+warte powiadomienia (zakres godzin, pierwszy na dzień, niezgłoszone). Na końcu
+wysyła JEDNĄ zbiorczą wiadomość (lub kilka, gdy długa), dopiero potem zapisuje sloty
+jako zgłoszone — błąd wysyłki = nic nie zapisane, następny skan ponowi. Sprząta
+klucze slotów, których już nie ma.
 """
 
 from typing import Callable, Iterable
 
-from models import Court
+from models import Court, Slot
 from monitor import notifiable_slots, slot_key, visible_keys
-from notifier import format_slot_message
+from notifier import format_grouped_messages
 from sources import fetch_html, parse_slots, schedule_dates
 
 
@@ -25,7 +27,7 @@ def scan_once(
     low, high = store.duration_range
     visible: set[str] = set()
     scanned_names: list[str] = []
-    notified = 0
+    new: list[tuple[Court, Slot]] = []
 
     for court in courts:
         slots = _slots_for_durations(court, today, range(high, low - 1, -1), fetch)
@@ -37,10 +39,12 @@ def scan_once(
         visible |= visible_keys(court.name, slots, scope)
 
         for slot in notifiable_slots(court.name, slots, scope, store.reported_keys()):
-            variant = court.with_duration(round(slot.duration_hours * 2))
-            notifier.send(format_slot_message(variant, slot))
-            store.mark_reported(slot_key(court.name, slot))
-            notified += 1
+            new.append((court.with_duration(round(slot.duration_hours * 2)), slot))
+
+    for message in format_grouped_messages(new):
+        notifier.send(message)
+    for court, slot in new:
+        store.mark_reported(slot_key(court.name, slot))
 
     # sprzątamy zniknięte sloty TYLKO dla kortów pobranych w tym przebiegu
     candidates = {
@@ -49,7 +53,7 @@ def scan_once(
         if any(key.startswith(f"{name}_") for name in scanned_names)
     }
     store.discard_reported(candidates - visible)
-    return notified
+    return len(new)
 
 
 def _slots_for_durations(court, today, durations, fetch):

@@ -35,23 +35,26 @@ def _fixture_fetch(court, today):
 def test_scan_notifies_first_slot_per_date(store):
     # domyślny zakres (0,23) — fixture ma sloty w 8 dniach
     notifier = FakeNotifier()
-    scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
-    assert len(notifier.sent) == 8
+    n = scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
+    assert n == 8
+    assert len(notifier.sent) == 1  # zgrupowane w jedną wiadomość
+    assert notifier.sent[0].count("\n• ") == 8
 
 
 def test_scan_does_not_renotify_on_second_run(store):
     notifier = FakeNotifier()
     scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
-    scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
-    assert len(notifier.sent) == 8  # drugi przebieg nie dorzuca nic
+    n = scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
+    assert n == 0
+    assert len(notifier.sent) == 1  # drugi przebieg nie wysyła nic
 
 
 def test_scan_respects_scope(store):
     store.set_slot_scope(15, 21)
     notifier = FakeNotifier()
-    scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
+    n = scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch)
     # mniej dni niż przy pełnym zakresie, ale > 0
-    assert 0 < len(notifier.sent) < 8
+    assert 0 < n < 8
 
 
 def test_scan_skips_court_when_fetch_fails(store):
@@ -72,8 +75,9 @@ def test_transient_failure_does_not_cause_renotification(store):
 
     # przebieg 1: oba OK -> zgłaszają sloty
     n1 = FakeNotifier()
-    scan_once(courts, store, n1, today="2026-06-24", fetch=fetch_factory(set()))
-    assert len(n1.sent) == 16  # 8 dni x 2 korty
+    sent1 = scan_once(courts, store, n1, today="2026-06-24", fetch=fetch_factory(set()))
+    assert sent1 == 16  # 8 dni x 2 korty
+    assert len(n1.sent) == 1 and "A\n" in n1.sent[0] and "B\n" in n1.sent[0]
 
     # przebieg 2: B pada -> nie wolno wyczyścić zgłoszeń B
     n2 = FakeNotifier()
@@ -112,7 +116,7 @@ def test_duration_range_prefers_longest_available(store):
 
     assert len(fetched) == 2  # 1.5h i 2h
     assert len(notifier.sent) == 1  # jeden na dzień
-    assert "18:00-20:00" in notifier.sent[0] and "2.0h" in notifier.sent[0]
+    assert "18:00-20:00 (2h)" in notifier.sent[0]
     assert "czas_rezerwacji=4" in notifier.sent[0]
 
 
@@ -125,7 +129,7 @@ def test_duration_range_falls_back_to_shorter(store):
         fetch=lambda c, t: html_by_czas[c.url.split("czas_rezerwacji=")[1]],
     )
     assert len(notifier.sent) == 1
-    assert "10:00-11:30" in notifier.sent[0] and "1.5h" in notifier.sent[0]
+    assert "10:00-11:30 (1.5h)" in notifier.sent[0]
     assert "czas_rezerwacji=3" in notifier.sent[0]
 
 
@@ -168,3 +172,17 @@ def test_ganador_court_skipped_when_one_day_fails(store):
     scan_once([court], store, notifier, today="2026-09-27",
               fetch=lambda c, t: None if t == "2026-09-30" else html)
     assert notifier.sent == []
+
+
+class FailingNotifier:
+    def send(self, text):
+        raise OSError("sieć padła")
+
+
+def test_failed_send_marks_nothing_so_next_scan_retries(store):
+    with pytest.raises(OSError):
+        scan_once([_court()], store, FailingNotifier(), today="2026-06-24", fetch=_fixture_fetch)
+    assert store.reported_keys() == set()
+
+    notifier = FakeNotifier()
+    assert scan_once([_court()], store, notifier, today="2026-06-24", fetch=_fixture_fetch) == 8
