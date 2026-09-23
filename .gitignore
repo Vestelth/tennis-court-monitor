@@ -7,3 +7,6 @@ __pycache__/
 # runtime state (kept out of git in v2 — patrz store.py / SQLite)
 *.db
 *.sqlite3
+
+# Claude Code — lokalne worktree (skille w .claude/skills SĄ w repo)
+.claude/worktrees/
