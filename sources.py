@@ -2,12 +2,14 @@
 
 Każdy kort ma `type` ("kluby" | "ganador"). Tu wiemy, jak dla danego typu:
 - zbudować URL grafiku na konkretny dzień (`build_url`),
+- wskazać, które dni pobrać, żeby pokryć tydzień do przodu (`schedule_dates`),
 - pobrać HTML z obsługą błędów sieci (`fetch_html`),
 - sparsować HTML do listy slotów właściwym parserem (`parse_slots`).
 
 Dzięki temu `app`/`service` nie wiedzą, z jakiej strony pochodzą dane.
 """
 
+from datetime import date, timedelta
 from typing import Callable, Optional
 
 import requests
@@ -23,6 +25,17 @@ _HEADERS = {
 
 # nazwa parametru daty w URL grafiku, per platforma
 _DATE_PARAM = {"kluby": "data_grafiku", "ganador": "date"}
+
+# ile dni pobieramy osobno: grafik kluby.org obejmuje tydzień w jednym zapytaniu,
+# Ganador pokazuje jeden dzień na stronę
+_DAYS_TO_FETCH = {"kluby": 1, "ganador": 7}
+
+
+def schedule_dates(court: Court, today: str) -> list[str]:
+    """Daty (YYYY-MM-DD), dla których trzeba pobrać grafik kortu."""
+    start = date.fromisoformat(today)
+    days = _DAYS_TO_FETCH.get(court.type, 1)
+    return [(start + timedelta(days=i)).isoformat() for i in range(days)]
 
 
 def build_url(court: Court, date: str) -> str:

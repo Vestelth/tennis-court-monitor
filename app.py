@@ -10,7 +10,7 @@ from typing import Callable, Iterable
 from models import Court
 from monitor import notifiable_slots, slot_key, visible_keys
 from notifier import format_slot_message
-from sources import fetch_html, parse_slots
+from sources import fetch_html, parse_slots, schedule_dates
 
 
 def scan_once(
@@ -56,16 +56,19 @@ def _slots_for_durations(court, today, durations, fetch):
     """Wolne sloty kortu dla każdej długości gry (od najdłuższej); None, gdy któryś fetch padł.
 
     Kolejność ma znaczenie: monitor bierze pierwszy slot na dzień, więc wygrywa
-    najdłuższa dostępna gra. Ten sam adres (Ganador) pobieramy tylko raz.
+    najdłuższa dostępna gra. Ten sam adres i dzień (Ganador) pobieramy tylko raz.
+    Brak choćby jednego dnia = kort pomijany w całości (inaczej re-notyfikacja).
     """
-    html_by_url: dict[str, "str | None"] = {}
+    html_cache: dict[tuple[str, str], "str | None"] = {}
     slots = []
     for half_hours in durations:
         variant = court.with_duration(half_hours)
-        if variant.url not in html_by_url:
-            html_by_url[variant.url] = fetch(variant, today)
-        html = html_by_url[variant.url]
-        if html is None:
-            return None
-        slots += parse_slots(variant, html)
+        for day in schedule_dates(court, today):
+            key = (variant.url, day)
+            if key not in html_cache:
+                html_cache[key] = fetch(variant, day)
+            html = html_cache[key]
+            if html is None:
+                return None
+            slots += parse_slots(variant, html)
     return slots

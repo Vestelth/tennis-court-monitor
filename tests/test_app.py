@@ -145,5 +145,26 @@ def test_ganador_fetched_once_for_duration_range(store):
     calls = []
     html = (Path(__file__).parent / "fixtures" / "ganador_tenis.html").read_text(encoding="utf-8")
     scan_once([court], store, FakeNotifier(), today="2026-06-24",
-              fetch=lambda c, t: calls.append(c.url) or html)
-    assert len(calls) == 1
+              fetch=lambda c, t: calls.append((c.url, t)) or html)
+    assert len(calls) == 7  # raz na dzień, mimo dwóch długości gry
+    assert len(set(calls)) == 7
+
+
+def test_ganador_scans_seven_days_once_each(store):
+    store.set_duration_range(3, 4)
+    court = Court(name="G", link="https://g", url="https://g", type="ganador", surface="MĄCZKA")
+    html = (Path(__file__).parent / "fixtures" / "ganador_tenis.html").read_text(encoding="utf-8")
+    days = []
+    scan_once([court], store, FakeNotifier(), today="2026-09-27",
+              fetch=lambda c, t: days.append(t) or html)
+    assert days == ["2026-09-27", "2026-09-28", "2026-09-29", "2026-09-30",
+                    "2026-10-01", "2026-10-02", "2026-10-03"]
+
+
+def test_ganador_court_skipped_when_one_day_fails(store):
+    court = Court(name="G", link="https://g", url="https://g", type="ganador", surface="MĄCZKA")
+    html = (Path(__file__).parent / "fixtures" / "ganador_tenis.html").read_text(encoding="utf-8")
+    notifier = FakeNotifier()
+    scan_once([court], store, notifier, today="2026-09-27",
+              fetch=lambda c, t: None if t == "2026-09-30" else html)
+    assert notifier.sent == []

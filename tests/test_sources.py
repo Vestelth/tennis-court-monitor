@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from models import Court
-from sources import build_url, fetch_html, parse_slots
+from sources import build_url, fetch_html, parse_slots, schedule_dates
 
 KLUBY_FIXTURE = Path(__file__).parent / "fixtures" / "spojnia_grafik.html"
 GANADOR_FIXTURE = Path(__file__).parent / "fixtures" / "ganador_tenis.html"
@@ -68,3 +68,15 @@ def test_parse_slots_dispatches_kluby():
 def test_parse_slots_dispatches_ganador_by_surface():
     html = GANADOR_FIXTURE.read_text(encoding="utf-8")
     assert len(parse_slots(_ganador(), html)) == 23
+
+
+def test_schedule_dates_kluby_single_request_covers_week():
+    court = Court(name="S", link="l", url="https://kluby.org/ajax.php?czas_rezerwacji=4")
+    assert schedule_dates(court, "2026-09-23") == ["2026-09-23"]
+
+
+def test_schedule_dates_ganador_seven_days_across_month_end():
+    court = Court(name="G", link="l", url="https://g", type="ganador", surface="TRAWA")
+    dates = schedule_dates(court, "2026-09-27")
+    assert len(dates) == 7
+    assert dates[0] == "2026-09-27" and dates[-1] == "2026-10-03"
