@@ -84,3 +84,66 @@ def test_transient_failure_does_not_cause_renotification(store):
     n3 = FakeNotifier()
     scan_once(courts, store, n3, today="2026-06-24", fetch=fetch_factory(set()))
     assert n3.sent == []
+
+
+def _slots_html(times):
+    """Minimalny grafik kluby.org: jeden dzień 24/06, sloty o podanych zakresach."""
+    rows = "".join(
+        f'<tr><td>x</td><td><a class="btn-success"><span>{t}</span></a></td></tr>' for t in times
+    )
+    return f'<table><thead><tr><th>h</th><th class="text-center">Śr 24/06</th></tr></thead><tbody>{rows}</tbody></table>'
+
+
+def _court_with_link():
+    return Court(name="Spojnia", link="https://kluby.org/spojnia?czas_rezerwacji=4", url="https://x?czas_rezerwacji=4")
+
+
+def test_duration_range_prefers_longest_available(store):
+    store.set_duration_range(3, 4)
+    html_by_czas = {"3": _slots_html(["10:00-11:30"]), "4": _slots_html(["18:00-20:00"])}
+    fetched = []
+
+    def fetch(court, today):
+        fetched.append(court.url)
+        return html_by_czas[court.url.split("czas_rezerwacji=")[1]]
+
+    notifier = FakeNotifier()
+    scan_once([_court_with_link()], store, notifier, today="2026-06-24", fetch=fetch)
+
+    assert len(fetched) == 2  # 1.5h i 2h
+    assert len(notifier.sent) == 1  # jeden na dzień
+    assert "18:00-20:00" in notifier.sent[0] and "2.0h" in notifier.sent[0]
+    assert "czas_rezerwacji=4" in notifier.sent[0]
+
+
+def test_duration_range_falls_back_to_shorter(store):
+    store.set_duration_range(3, 4)
+    html_by_czas = {"3": _slots_html(["10:00-11:30"]), "4": _slots_html([])}
+    notifier = FakeNotifier()
+    scan_once(
+        [_court_with_link()], store, notifier, today="2026-06-24",
+        fetch=lambda c, t: html_by_czas[c.url.split("czas_rezerwacji=")[1]],
+    )
+    assert len(notifier.sent) == 1
+    assert "10:00-11:30" in notifier.sent[0] and "1.5h" in notifier.sent[0]
+    assert "czas_rezerwacji=3" in notifier.sent[0]
+
+
+def test_court_skipped_when_any_duration_fetch_fails(store):
+    store.set_duration_range(3, 4)
+    notifier = FakeNotifier()
+    scan_once(
+        [_court()], store, notifier, today="2026-06-24",
+        fetch=lambda c, t: None if "czas_rezerwacji=4" in c.url else _slots_html(["10:00-11:30"]),
+    )
+    assert notifier.sent == []
+
+
+def test_ganador_fetched_once_for_duration_range(store):
+    store.set_duration_range(3, 4)
+    court = Court(name="G", link="https://g", url="https://g", type="ganador", surface="TRAWA")
+    calls = []
+    html = (Path(__file__).parent / "fixtures" / "ganador_tenis.html").read_text(encoding="utf-8")
+    scan_once([court], store, FakeNotifier(), today="2026-06-24",
+              fetch=lambda c, t: calls.append(c.url) or html)
+    assert len(calls) == 1

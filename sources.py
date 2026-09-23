@@ -48,5 +48,5 @@ def fetch_html(
 
 def parse_slots(court: Court, html: str) -> list[Slot]:
     if court.type == "ganador":
-        return parse_ganador(html, court.surface or "")
+        return parse_ganador(html, court.surface or "", hours=court.duration_hours)
     return parse_free_slots(html)

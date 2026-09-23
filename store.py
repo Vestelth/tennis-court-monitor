@@ -2,7 +2,7 @@
 
 Zastępuje pliki-flagi v1 (enabled.txt, force_run.txt) i state.json:
 - włączenie monitoringu,
-- zakres godzin slotów i godziny działania monitoringu,
+- zakres godzin slotów, godziny działania monitoringu i długość gry,
 - zbiór już zgłoszonych slotów (deduplikacja powiadomień).
 """
 
@@ -15,6 +15,8 @@ _DEFAULTS = {
     "scope_end": "23",
     "hours_start": "0",
     "hours_end": "23",
+    "dur_min": "4",  # długość gry w półgodzinach (czas_rezerwacji kluby.org)
+    "dur_max": "4",
     "last_update_id": "0",
 }
 
@@ -71,6 +73,15 @@ class Store:
     def set_monitor_hours(self, start: int, end: int) -> None:
         self._set("hours_start", str(start))
         self._set("hours_end", str(end))
+
+    @property
+    def duration_range(self) -> tuple[int, int]:
+        """Szukana długość gry (min, max) w półgodzinach."""
+        return int(self._get("dur_min")), int(self._get("dur_max"))
+
+    def set_duration_range(self, low: int, high: int) -> None:
+        self._set("dur_min", str(low))
+        self._set("dur_max", str(high))
 
     @property
     def last_update_id(self) -> int:

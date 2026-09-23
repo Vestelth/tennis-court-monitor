@@ -70,3 +70,27 @@ def test_help_lists_commands(store):
 
 def test_unknown_command_returns_none(store):
     assert handle_command("cześć", store, COURTS) is None
+
+
+def test_duration_sets_range_in_half_hours(store):
+    reply = handle_command("/duration 1.5 2", store, COURTS)
+    assert store.duration_range == (3, 4)
+    assert "1.5" in reply and "2" in reply
+
+
+def test_duration_accepts_comma_and_single_value(store):
+    handle_command("/duration 1,5", store, COURTS)
+    assert store.duration_range == (3, 3)
+
+
+@pytest.mark.parametrize("text", ["/duration", "/duration x", "/duration 1.25", "/duration 2 1", "/duration 0 2", "/duration 1 5"])
+def test_duration_bad_args_return_usage_and_do_not_change(store, text):
+    reply = handle_command(text, store, COURTS)
+    assert "Użycie" in reply
+    assert store.duration_range == (4, 4)
+
+
+def test_status_and_help_mention_duration(store):
+    store.set_duration_range(3, 4)
+    assert "1.5-2h" in handle_command("/status", store, COURTS)
+    assert "/duration" in handle_command("/help", store, COURTS)

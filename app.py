@@ -22,22 +22,23 @@ def scan_once(
 ) -> int:
     """Wykonuje jeden przebieg skanu. Zwraca liczbę wysłanych powiadomień."""
     scope = store.slot_scope
+    low, high = store.duration_range
     visible: set[str] = set()
     scanned_names: list[str] = []
     notified = 0
 
     for court in courts:
-        html = fetch(court, today)
-        if html is None:
+        slots = _slots_for_durations(court, today, range(high, low - 1, -1), fetch)
+        if slots is None:
             # kort nie odpowiedział — nie ruszamy jego zgłoszeń (inaczej re-notyfikacja)
             continue
         scanned_names.append(court.name)
 
-        slots = parse_slots(court, html)
         visible |= visible_keys(court.name, slots, scope)
 
         for slot in notifiable_slots(court.name, slots, scope, store.reported_keys()):
-            notifier.send(format_slot_message(court, slot))
+            variant = court.with_duration(round(slot.duration_hours * 2))
+            notifier.send(format_slot_message(variant, slot))
             store.mark_reported(slot_key(court.name, slot))
             notified += 1
 
@@ -49,3 +50,22 @@ def scan_once(
     }
     store.discard_reported(candidates - visible)
     return notified
+
+
+def _slots_for_durations(court, today, durations, fetch):
+    """Wolne sloty kortu dla każdej długości gry (od najdłuższej); None, gdy któryś fetch padł.
+
+    Kolejność ma znaczenie: monitor bierze pierwszy slot na dzień, więc wygrywa
+    najdłuższa dostępna gra. Ten sam adres (Ganador) pobieramy tylko raz.
+    """
+    html_by_url: dict[str, "str | None"] = {}
+    slots = []
+    for half_hours in durations:
+        variant = court.with_duration(half_hours)
+        if variant.url not in html_by_url:
+            html_by_url[variant.url] = fetch(variant, today)
+        html = html_by_url[variant.url]
+        if html is None:
+            return None
+        slots += parse_slots(variant, html)
+    return slots

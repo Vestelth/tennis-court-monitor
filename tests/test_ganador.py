@@ -44,3 +44,17 @@ def test_slots_have_dd_mm_date_and_hourly_range(html):
 
 def test_empty_html_returns_no_slots():
     assert parse_ganador("", "TRAWA") == []
+
+
+def test_duration_requires_consecutive_free_hours(html):
+    # KORT1 TRAWA: wolne 17,18,19,20 i 22; KORT3: 19, 21, 22 -> 2h okna tylko z sąsiednich godzin
+    slots = parse_ganador(html, "TRAWA", hours=2)
+    ranges = {s.time_range for s in slots}
+    assert "17:00-19:00" in ranges  # KORT1
+    assert "21:00-23:00" in ranges  # KORT3/KORT4
+    assert all(s.duration_hours == 2.0 for s in slots)
+    assert "22:00-24:00" not in ranges  # 22 to ostatnia godzina — brak następnej
+
+
+def test_half_hour_duration_rounds_up_to_full_hours(html):
+    assert parse_ganador(html, "MĄCZKA", hours=1.5) == parse_ganador(html, "MĄCZKA", hours=2)

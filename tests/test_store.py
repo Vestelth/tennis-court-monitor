@@ -71,3 +71,12 @@ def test_last_update_id_defaults_zero_and_set(store):
     assert store.last_update_id == 0
     store.set_last_update_id(42)
     assert store.last_update_id == 42
+
+
+def test_duration_defaults_to_two_hours(store):
+    assert store.duration_range == (4, 4)  # półgodziny
+
+
+def test_set_duration_range(store):
+    store.set_duration_range(3, 4)
+    assert store.duration_range == (3, 4)

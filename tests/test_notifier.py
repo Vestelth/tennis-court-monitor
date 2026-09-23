@@ -31,3 +31,9 @@ def test_send_uses_timeout_so_dead_connection_cannot_hang_service():
     assert url.endswith("/botTOKEN/sendMessage")
     assert kw["json"] == {"chat_id": "123", "text": "hej"}
     assert kw["timeout"] > 0
+
+
+def test_message_uses_slot_duration_not_court_default():
+    court = Court(name="S", link="https://l?czas_rezerwacji=3", url="https://x?czas_rezerwacji=4")
+    msg = format_slot_message(court, Slot(date="24/06", time_range="06:00-07:30"))
+    assert "1.5h" in msg

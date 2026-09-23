@@ -19,7 +19,7 @@ def format_slot_message(court: Court, slot: Slot) -> str:
         f"Wolny kort: {court.name}\n"
         f"Data: {slot.date}\n"
         f"Termin: {slot.time_range}\n"
-        f"Długość: {court.duration_hours}h\n"
+        f"Długość: {slot.duration_hours}h\n"
         f"{court.link}"
     )
 
