@@ -1,5 +1,5 @@
 from models import Court, Slot
-from notifier import format_slot_message
+from notifier import TelegramNotifier, format_slot_message
 
 
 def test_format_slot_message_contains_all_fields():
@@ -17,3 +17,17 @@ def test_format_slot_message_contains_all_fields():
     assert "15:00-17:00" in msg
     assert "2.0h" in msg  # czas_rezerwacji=4 -> 2.0h
     assert "https://kluby.org/spojnia/dostepnosc" in msg
+
+
+def test_send_uses_timeout_so_dead_connection_cannot_hang_service():
+    calls = []
+    notifier = TelegramNotifier(
+        "TOKEN", "123", poster=lambda url, **kw: calls.append((url, kw))
+    )
+
+    notifier.send("hej")
+
+    url, kw = calls[0]
+    assert url.endswith("/botTOKEN/sendMessage")
+    assert kw["json"] == {"chat_id": "123", "text": "hej"}
+    assert kw["timeout"] > 0

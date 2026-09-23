@@ -10,6 +10,9 @@ import requests
 
 from models import Court, Slot
 
+# Bez timeoutu zerwane połączenie (np. zgubione pakiety IPv6) wiesza całą usługę.
+SEND_TIMEOUT = 15  # sekundy
+
 
 def format_slot_message(court: Court, slot: Slot) -> str:
     return (
@@ -33,4 +36,8 @@ class TelegramNotifier:
         self._poster = poster
 
     def send(self, text: str) -> None:
-        self._poster(self._url, json={"chat_id": self._chat_id, "text": text})
+        self._poster(
+            self._url,
+            json={"chat_id": self._chat_id, "text": text},
+            timeout=SEND_TIMEOUT,
+        )
