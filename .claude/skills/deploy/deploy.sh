@@ -41,22 +41,8 @@ START="$("$SSH" -o BatchMode=yes -p $PORT $HOST 'date "+%Y-%m-%d %H:%M:%S"')"
 "$SSH" -o BatchMode=yes -p $PORT $HOST 'bash /opt/court-monitor/deploy/deploy.sh' 2>&1 \
   | grep -E '==>|Active:|!!!' || true
 
-step "Weryfikacja (czekam do ${SCAN_WAIT}s na pierwszy skan)"
-"$SSH" -o BatchMode=yes -p $PORT $HOST "
-  set -e
-  deployed=\$(git -C /opt/court-monitor rev-parse --short HEAD)
-  echo \"commit na serwerze: \$deployed\"
-  [ \"\$deployed\" = '$HEAD_SHA' ] || { echo '!!! commit na serwerze != HEAD'; exit 1; }
-  systemctl is-active --quiet court-monitor || { echo '!!! usługa nie działa'; exit 1; }
-  for i in \$(seq 1 $SCAN_WAIT); do
-    logs=\$(journalctl -u court-monitor --since '$START' --no-pager -o cat)
-    if echo \"\$logs\" | grep -q 'Skan zakończony'; then break; fi
-    sleep 1
-  done
-  echo \"\$logs\" | grep -E 'INFO|WARNING|ERROR|Traceback' || true
-  echo \"\$logs\" | grep -q 'Skan zakończony' || echo '(brak skanu — poza /hours albo monitoring OFF; sprawdź /status)'
-  ! echo \"\$logs\" | grep -qE 'ERROR|Traceback' || { echo '!!! błędy w logu'; exit 1; }
-"
+step "Weryfikacja"
+"$SSH" -o BatchMode=yes -p $PORT $HOST "bash -s -- '$HEAD_SHA' '$START' '$SCAN_WAIT'" < "$(dirname "$0")/verify-remote.sh"
 
 if [ "$MAIN" != "$ROOT" ]; then
   step "git pull w głównym checkoucie ($MAIN)"

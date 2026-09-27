@@ -17,7 +17,8 @@ Deploy to akcja produkcyjna — odpalaj tylko na wyraźne polecenie użytkownika
    bash .claude/skills/deploy/deploy.sh
    ```
    Robi: czyste drzewo + `origin/v2` jest przodkiem HEAD → pytest → klucz w agencie →
-   push `HEAD:v2` → `deploy.sh` na serwerze → sprawdza commit, usługę i pierwszy skan →
+   push `HEAD:v2` → `deploy.sh` na serwerze → `verify-remote.sh` (commit, usługa, pierwszy
+   skan — czeka tylko gdy monitoring ON i godzina w `/hours`) →
    `git pull` w głównym checkoucie. Kończy się `!!!` przy pierwszym błędzie.
 3. **Wiki** — obowiązkowe, deploy bez tego nie jest skończony. W
    `C:/Users/conta/Documents/Obsidian/personal-wiki/wiki/projects/tennis-court-monitor.md`:
@@ -35,7 +36,8 @@ Deploy to akcja produkcyjna — odpalaj tylko na wyraźne polecenie użytkownika
 | `Niezacommitowane zmiany` / `origin/v2 ma commity` | Commit albo pull/rebase — nie wymuszaj pusha. |
 | testy czerwone | Nie deployuj; napraw (superpowers:systematic-debugging). |
 | `commit na serwerze != HEAD`, `usługa nie działa`, `błędy w logu` | `journalctl -u court-monitor -n 50` przez SSH, diagnoza przed ponownym deployem. |
-| `brak skanu` | Nie błąd: poza `/hours` albo monitoring OFF — powiedz użytkownikowi. |
+| `skan pominięty: …` | Nie błąd: poza `/hours` albo monitoring OFF (skrypt nie czeka) — powiedz użytkownikowi. |
+| `brak skanu mimo godzin pracy` | Usługa działa, ale nie skanuje w 120 s — logi przez SSH, diagnoza. |
 
 ## Pułapki
 
