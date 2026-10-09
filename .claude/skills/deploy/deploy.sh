@@ -42,7 +42,9 @@ START="$("$SSH" -o BatchMode=yes -p $PORT $HOST 'date "+%Y-%m-%d %H:%M:%S"')"
   | grep -E '==>|Active:|!!!' || true
 
 step "Weryfikacja"
-"$SSH" -o BatchMode=yes -p $PORT $HOST "bash -s -- '$HEAD_SHA' '$START' '$SCAN_WAIT'" < "$(dirname "$0")/verify-remote.sh"
+# tr: gdyby plik dostał CRLF (core.autocrlf), bash na serwerze czytałby np. "pipefail\r"
+tr -d '\r' < "$(dirname "$0")/verify-remote.sh" \
+  | "$SSH" -o BatchMode=yes -p $PORT $HOST "bash -s -- '$HEAD_SHA' '$START' '$SCAN_WAIT'"
 
 if [ "$MAIN" != "$ROOT" ]; then
   step "git pull w głównym checkoucie ($MAIN)"
