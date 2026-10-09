@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 import pytest
 
@@ -78,3 +79,37 @@ def test_court_defaults_to_kluby_type():
     court = Court(name="a", link="x", url="https://x")
     assert court.type == "kluby"
     assert court.surface is None
+
+
+# ---------- spójność prawdziwego config.json (literówki = kort po cichu nieskanowany) ----------
+REAL_CONFIG = Path(__file__).parent.parent / "config.json"
+
+
+def _kluby_courts():
+    return [c for c in load_courts(REAL_CONFIG) if c.type == "kluby"]
+
+
+def _qs(url):
+    return parse_qs(urlparse(url).query)
+
+
+def test_real_config_link_points_to_same_object_type_as_data_url():
+    for court in _kluby_courts():
+        link_typ = _qs(court.link).get("typ_obiektu")
+        if link_typ:  # niektóre linki (np. OSiR) nie mają typu
+            assert link_typ == _qs(court.url)["typ_obiektu"], court.name
+
+
+def test_real_config_kluby_uses_standard_schedule_endpoint():
+    # wariant ..._termin.php odpowiada "Nie możesz rezerwować wstecz" -> 0 slotów
+    for court in _kluby_courts():
+        assert urlparse(court.url).path.endswith("/dostepne_korty_wybrany_typ.php"), court.name
+
+
+def test_real_config_link_slug_is_unique_per_club():
+    # ten sam slug strony (np. /umacieja/) nie może wskazywać na dwa różne kluby
+    slug_to_klub = {}
+    for court in _kluby_courts():
+        slug = urlparse(court.link).path.split("/")[1]
+        klub = _qs(court.url)["klub"][0]
+        assert slug_to_klub.setdefault(slug, klub) == klub, f"{court.name}: /{slug}/ już przypisany do klub={slug_to_klub[slug]}"
